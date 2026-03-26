@@ -166,6 +166,20 @@ CAPABILITIES: tuple[Capability, ...] = (
         effects=("read",),
     ),
     Capability(
+        capability_id="runtime.dashboard.summary",
+        domain="runtime",
+        description="Return a Runtime Family operator dashboard summary",
+        surfaces=("cli", "api", "tui", "gui"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="review.meeting.surface",
+        domain="governance",
+        description="Return a structured review meeting orchestration surface",
+        surfaces=("cli", "api", "tui", "gui"),
+        effects=("read",),
+    ),
+    Capability(
         capability_id="governance.finding.to_task",
         domain="governance",
         description="Convert a finding into a structured follow-up task suggestion",

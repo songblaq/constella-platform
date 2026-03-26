@@ -33,6 +33,16 @@ def workflow_packs() -> dict:
     return service.invoke("workflow.pack.list")
 
 
+@app.get("/runtime/dashboard")
+def runtime_dashboard_summary() -> dict:
+    return service.invoke("runtime.dashboard.summary")
+
+
+@app.get("/governance/review-meeting")
+def review_meeting_surface() -> dict:
+    return service.invoke("review.meeting.surface")
+
+
 @app.get("/governance/findings/{title}/task")
 def governance_finding_to_task(title: str) -> dict:
     return service.invoke("governance.finding.to_task", {"title": title})

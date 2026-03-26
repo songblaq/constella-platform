@@ -87,3 +87,21 @@ def lesson_to_guardrail(title: str) -> dict:
         "guardrail_title": f"Guardrail: {match['title']}",
         "guardrail_summary": match["next_guardrail"],
     }
+
+
+def review_meeting_surface() -> dict:
+    findings = list_findings()
+    decisions = list_decisions()
+    lessons = list_lessons()
+    return {
+        "flows": [
+            {"id": "review-meeting-core", "title": "Core review meeting", "status": "available"},
+            {"id": "review-followup-routing", "title": "Finding to follow-up routing", "status": "available"},
+            {"id": "lesson-guardrail-promotion", "title": "Lesson to guardrail promotion", "status": "available"},
+        ],
+        "summary": {
+            "findings": len(findings),
+            "decisions": len(decisions),
+            "lessons": len(lessons),
+        },
+    }

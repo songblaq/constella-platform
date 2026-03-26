@@ -102,6 +102,16 @@ class CapabilityService:
             }
         elif capability_id == "workflow.pack.list":
             data = list_operator_packs()
+        elif capability_id == "runtime.dashboard.summary":
+            runtimes = aria_runtime.list_runtimes()
+            data = {
+                "runtime_count": len(runtimes),
+                "enabled_count": sum(1 for item in runtimes if item.get("enabled")),
+                "types": sorted({str(item.get("type", "unknown")) for item in runtimes}),
+                "runtimes": runtimes,
+            }
+        elif capability_id == "review.meeting.surface":
+            data = program_history.review_meeting_surface()
         elif capability_id == "governance.finding.to_task":
             data = program_history.finding_to_task(payload["title"])
         elif capability_id == "governance.lesson.to_guardrail":
