@@ -37,6 +37,16 @@ After the command finishes, these files should exist:
    - `path_assumption`
    - `install_doc_gap`
 
+Optional helper:
+
+```bash
+python scripts/post_bootstrap_issue_comment.py \
+  --repo songblaq/constella-platform \
+  --issue 1 \
+  --comment-file ~/.constellar/manifests/last-bootstrap-issue-comment.md \
+  --dry-run
+```
+
 ## If You Want More Detail
 
 - Full runbook: [`multi-machine-bootstrap.md`](multi-machine-bootstrap.md)
