@@ -32,5 +32,6 @@ Constella Platform is the product repo for the shared capability/service core an
 - Public feedback should come through GitHub issues and PRs
 - Internal execution still maps back to AgentHive / Plaza / llm-collab
 - For an external verification pass, start with [`docs/second-machine-quickstart.md`](docs/second-machine-quickstart.md)
+- Public CI now runs the baseline pytest suite on push and pull_request via [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the public collaboration loop.
