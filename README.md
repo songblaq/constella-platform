@@ -17,6 +17,7 @@ Constella Platform is the product repo for the shared capability/service core an
 
 ## Verification and release
 
+- Second-machine quickstart: [`docs/second-machine-quickstart.md`](docs/second-machine-quickstart.md)
 - Multi-machine bootstrap runbook: [`docs/multi-machine-bootstrap.md`](docs/multi-machine-bootstrap.md)
 - Bootstrap verification report template: [`docs/bootstrap-verification-report-template.md`](docs/bootstrap-verification-report-template.md)
 - Release prep notes: [`docs/release-prep.md`](docs/release-prep.md)
@@ -29,5 +30,6 @@ Constella Platform is the product repo for the shared capability/service core an
 - Repository: [songblaq/constella-platform](https://github.com/songblaq/constella-platform)
 - Public feedback should come through GitHub issues and PRs
 - Internal execution still maps back to AgentHive / Plaza / llm-collab
+- For an external verification pass, start with [`docs/second-machine-quickstart.md`](docs/second-machine-quickstart.md)
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the public collaboration loop.

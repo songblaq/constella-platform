@@ -15,6 +15,8 @@ Constella Platform uses three linked loops:
 3. If code changes are needed, open a PR and link the issue.
 4. The issue/PR should be reflected back into AgentHive tasks or governance records.
 
+For second-machine verification of `TASK-024`, start with [`docs/second-machine-quickstart.md`](docs/second-machine-quickstart.md).
+
 ## What to include
 
 - expected behavior
