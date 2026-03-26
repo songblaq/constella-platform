@@ -44,3 +44,12 @@ python scripts/bootstrap_constellar.py --home ~/.constellar
 - GitHub: issue `#1`
 - AgentHive: `constella-platform/TASK-024`
 - Governance: repeated gaps should become lessons/guardrails
+
+## Optional Helper
+
+Instead of writing the report by hand, you can render a ready-to-paste comment from the generated JSON artifact:
+
+```bash
+python scripts/render_bootstrap_issue_comment.py \
+  --verification-json ~/.constellar/manifests/last-bootstrap-verification.json
+```

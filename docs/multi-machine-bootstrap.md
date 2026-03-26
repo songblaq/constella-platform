@@ -72,3 +72,9 @@ python scripts/bootstrap_constellar.py --home ~/.constellar
 - Governance: lessons should become guardrails if repeated
 - Attach the generated JSON or Markdown verification artifact to the issue comment when possible
 - Use [`docs/bootstrap-verification-report-template.md`](bootstrap-verification-report-template.md) when posting the result
+- Or render a ready-to-paste issue comment:
+
+```bash
+python scripts/render_bootstrap_issue_comment.py \
+  --verification-json ~/.constellar/manifests/last-bootstrap-verification.json
+```
