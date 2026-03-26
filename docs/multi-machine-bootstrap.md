@@ -71,3 +71,4 @@ python scripts/bootstrap_constellar.py --home ~/.constellar
 - AgentHive: map findings back to `TASK-024`
 - Governance: lessons should become guardrails if repeated
 - Attach the generated JSON or Markdown verification artifact to the issue comment when possible
+- Use [`docs/bootstrap-verification-report-template.md`](bootstrap-verification-report-template.md) when posting the result
