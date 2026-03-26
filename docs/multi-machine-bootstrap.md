@@ -76,8 +76,13 @@ python scripts/bootstrap_constellar.py --home ~/.constellar
 
 ```bash
 python scripts/render_bootstrap_issue_comment.py \
-  --verification-json ~/.constellar/manifests/last-bootstrap-verification.json
+  --verification-json ~/.constellar/manifests/last-bootstrap-verification.json \
+  --output ~/.constellar/manifests/last-bootstrap-issue-comment.md
 ```
+
+This writes a reusable Markdown file at:
+
+- `~/.constellar/manifests/last-bootstrap-issue-comment.md`
 
 - Or run the whole preflight in one command:
 

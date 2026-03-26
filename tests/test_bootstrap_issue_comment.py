@@ -31,8 +31,16 @@ def test_render_bootstrap_issue_comment(tmp_path):
         encoding="utf-8",
     )
 
+    output_path = tmp_path / "issue-comment.md"
     result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--verification-json", str(verification)],
+        [
+            sys.executable,
+            str(SCRIPT),
+            "--verification-json",
+            str(verification),
+            "--output",
+            str(output_path),
+        ],
         check=False,
         capture_output=True,
         text=True,
@@ -44,3 +52,5 @@ def test_render_bootstrap_issue_comment(tmp_path):
     assert "- install mode: `dev`" in result.stdout
     assert "- `agent-hive`" in result.stdout
     assert "- `openclaw`" in result.stdout
+    assert output_path.exists()
+    assert "## Bootstrap Verification Result" in output_path.read_text(encoding="utf-8")

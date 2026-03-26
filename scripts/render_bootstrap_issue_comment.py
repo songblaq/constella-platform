@@ -40,13 +40,17 @@ def render_markdown(payload: dict) -> str:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="render_bootstrap_issue_comment")
     parser.add_argument("--verification-json", required=True)
+    parser.add_argument("--output")
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
     payload = load_payload(Path(args.verification_json))
-    print(render_markdown(payload), end="")
+    markdown = render_markdown(payload)
+    if args.output:
+        Path(args.output).write_text(markdown, encoding="utf-8")
+    print(markdown, end="")
     return 0
 
 
