@@ -1,0 +1,197 @@
+from __future__ import annotations
+
+from constella_platform.models import Capability
+
+
+CAPABILITIES: tuple[Capability, ...] = (
+    Capability(
+        capability_id="capabilities.list",
+        domain="core",
+        description="List registered capabilities",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="program.plan.create",
+        domain="program",
+        description="Create a tracked plan entry",
+        surfaces=("cli", "api"),
+        effects=("create", "write"),
+    ),
+    Capability(
+        capability_id="program.plan.list",
+        domain="program",
+        description="List tracked plan entries",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="history.lesson.create",
+        domain="history",
+        description="Create a lesson entry for a failed or partial run",
+        surfaces=("cli", "api"),
+        effects=("create", "write"),
+    ),
+    Capability(
+        capability_id="history.lesson.list",
+        domain="history",
+        description="List lesson entries",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="review.finding.create",
+        domain="review",
+        description="Create a review finding entry",
+        surfaces=("cli", "api"),
+        effects=("create", "write"),
+    ),
+    Capability(
+        capability_id="review.finding.list",
+        domain="review",
+        description="List review finding entries",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="decision.create",
+        domain="decision",
+        description="Create a decision log entry",
+        surfaces=("cli", "api"),
+        effects=("create", "write"),
+    ),
+    Capability(
+        capability_id="decision.list",
+        domain="decision",
+        description="List decision log entries",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="aria.runtime.list",
+        domain="aria",
+        description="List Runtime Family entries from ARIA config",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="aria.nyx.list",
+        domain="aria",
+        description="List Nyx agent entries from ARIA agents config",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="agenthive.project.list",
+        domain="agenthive",
+        description="List AgentHive projects from the registry",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="agenthive.backlog.summary",
+        domain="agenthive",
+        description="Summarize a project's backlog board",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="orbit.snapshot",
+        domain="orbit",
+        description="Read the latest ORBIT status and sync snapshot",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="agenthive.project.upsert",
+        domain="agenthive",
+        description="Preview or apply a constrained AgentHive project upsert",
+        surfaces=("cli", "api"),
+        effects=("update", "write"),
+    ),
+    Capability(
+        capability_id="agenthive.task.upsert",
+        domain="agenthive",
+        description="Preview or apply a constrained AgentHive task upsert",
+        surfaces=("cli", "api"),
+        effects=("update", "write"),
+    ),
+    Capability(
+        capability_id="orbit.schedule.update",
+        domain="orbit",
+        description="Preview or apply a narrow ORBIT schedule mutation",
+        surfaces=("cli", "api"),
+        effects=("update", "write"),
+    ),
+    Capability(
+        capability_id="orbit.task.update",
+        domain="orbit",
+        description="Preview or apply a narrow ORBIT task mutation",
+        surfaces=("cli", "api"),
+        effects=("update", "write"),
+    ),
+    Capability(
+        capability_id="aria.runtime.config.update",
+        domain="aria",
+        description="Preview or apply a constrained ARIA runtime config update",
+        surfaces=("cli", "api"),
+        effects=("update", "write"),
+    ),
+    Capability(
+        capability_id="aria.runtime.enablement.update",
+        domain="aria",
+        description="Preview or apply enablement changes for a single runtime",
+        surfaces=("cli", "api"),
+        effects=("update", "write"),
+    ),
+    Capability(
+        capability_id="aria.agent.surface.update",
+        domain="aria",
+        description="Preview or apply a constrained ARIA agent surface update",
+        surfaces=("cli", "api"),
+        effects=("update", "write"),
+    ),
+    Capability(
+        capability_id="shell.parity.report",
+        domain="shell",
+        description="Report CLI/TUI/GUI/API parity gaps and operator scenarios",
+        surfaces=("cli", "api", "tui", "gui"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="workflow.pack.list",
+        domain="workflow",
+        description="List available workflow/operator packs",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="governance.finding.to_task",
+        domain="governance",
+        description="Convert a finding into a structured follow-up task suggestion",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="governance.lesson.to_guardrail",
+        domain="governance",
+        description="Convert a lesson into a structured guardrail suggestion",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+)
+
+
+def all_capabilities() -> list[dict[str, object]]:
+    return [
+        {
+            "capability_id": item.capability_id,
+            "domain": item.domain,
+            "description": item.description,
+            "surfaces": list(item.surfaces),
+            "effects": list(item.effects),
+            "dangerous": item.dangerous,
+            "audit_required": item.audit_required,
+        }
+        for item in CAPABILITIES
+    ]
