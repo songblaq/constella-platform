@@ -30,6 +30,13 @@ def build_parser() -> argparse.ArgumentParser:
     workflow_pack_list = workflow_pack_sub.add_parser("list")
     workflow_pack_list.set_defaults(capability_id="workflow.pack.list")
 
+    distribution = sub.add_parser("distribution")
+    distribution_sub = distribution.add_subparsers(dest="distribution_command", required=True)
+    distribution_release = distribution_sub.add_parser("release")
+    distribution_release_sub = distribution_release.add_subparsers(dest="distribution_release_command", required=True)
+    distribution_release_prep = distribution_release_sub.add_parser("prep")
+    distribution_release_prep.set_defaults(capability_id="distribution.release.prep")
+
     governance = sub.add_parser("governance")
     governance_sub = governance.add_subparsers(dest="governance_command", required=True)
     finding = governance_sub.add_parser("finding")
@@ -46,6 +53,13 @@ def build_parser() -> argparse.ArgumentParser:
     review_meeting_sub = review_meeting.add_subparsers(dest="review_meeting_command", required=True)
     review_meeting_surface = review_meeting_sub.add_parser("surface")
     review_meeting_surface.set_defaults(capability_id="review.meeting.surface")
+
+    operator = sub.add_parser("operator")
+    operator_sub = operator.add_subparsers(dest="operator_command", required=True)
+    detail = operator_sub.add_parser("detail")
+    detail_sub = detail.add_subparsers(dest="detail_command", required=True)
+    detail_views = detail_sub.add_parser("views")
+    detail_views.set_defaults(capability_id="operator.detail.views")
 
     program = sub.add_parser("program")
     program_sub = program.add_subparsers(dest="program_command", required=True)

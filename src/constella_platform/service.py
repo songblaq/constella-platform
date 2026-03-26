@@ -5,7 +5,9 @@ from typing import Any
 from constella_platform.capability_registry import all_capabilities
 from constella_platform.domains import agenthive, aria_runtime, orbit, program_history
 from constella_platform.models import DecisionCreate, FindingCreate, LessonCreate, PlanCreate
+from constella_platform.operator_views import build_detail_views
 from constella_platform.parity import build_operator_scenarios, build_shell_parity_report
+from constella_platform.release_prep import build_release_prep
 from constella_platform.workflow_packs import list_operator_packs
 from constella_platform import store
 
@@ -112,6 +114,10 @@ class CapabilityService:
             }
         elif capability_id == "review.meeting.surface":
             data = program_history.review_meeting_surface()
+        elif capability_id == "distribution.release.prep":
+            data = build_release_prep()
+        elif capability_id == "operator.detail.views":
+            data = build_detail_views()
         elif capability_id == "governance.finding.to_task":
             data = program_history.finding_to_task(payload["title"])
         elif capability_id == "governance.lesson.to_guardrail":

@@ -180,6 +180,20 @@ CAPABILITIES: tuple[Capability, ...] = (
         effects=("read",),
     ),
     Capability(
+        capability_id="distribution.release.prep",
+        domain="distribution",
+        description="Return release/package preparation metadata",
+        surfaces=("cli", "api"),
+        effects=("read",),
+    ),
+    Capability(
+        capability_id="operator.detail.views",
+        domain="operator",
+        description="Return operator detail/drilldown view definitions",
+        surfaces=("cli", "api", "tui", "gui"),
+        effects=("read",),
+    ),
+    Capability(
         capability_id="governance.finding.to_task",
         domain="governance",
         description="Convert a finding into a structured follow-up task suggestion",

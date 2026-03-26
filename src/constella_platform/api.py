@@ -33,6 +33,16 @@ def workflow_packs() -> dict:
     return service.invoke("workflow.pack.list")
 
 
+@app.get("/distribution/release")
+def distribution_release_prep() -> dict:
+    return service.invoke("distribution.release.prep")
+
+
+@app.get("/operator/detail-views")
+def operator_detail_views() -> dict:
+    return service.invoke("operator.detail.views")
+
+
 @app.get("/runtime/dashboard")
 def runtime_dashboard_summary() -> dict:
     return service.invoke("runtime.dashboard.summary")
