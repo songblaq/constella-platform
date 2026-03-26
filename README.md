@@ -15,6 +15,11 @@ Constella Platform is the product repo for the shared capability/service core an
 - CLI: `constella-platform ...`
 - API: `python -m constella_platform.api`
 
+## Verification and release
+
+- Multi-machine bootstrap runbook: [`docs/multi-machine-bootstrap.md`](docs/multi-machine-bootstrap.md)
+- Release prep notes: [`docs/release-prep.md`](docs/release-prep.md)
+
 ## Public collaboration
 
 - Repository: [songblaq/constella-platform](https://github.com/songblaq/constella-platform)
