@@ -1,0 +1,336 @@
+#!/usr/bin/env python3
+import argparse
+import json
+import os
+import socket
+import sys
+import tarfile
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+def constellar_home() -> Path:
+    override = os.environ.get("CONSTELLAR_HOME")
+    if override:
+        return Path(override).expanduser()
+    return Path.home() / ".constellar"
+
+
+def profile_dir() -> Path:
+    return constellar_home() / "profiles"
+
+
+def manifest_dir() -> Path:
+    return constellar_home() / "manifests"
+
+
+def backup_dir() -> Path:
+    return constellar_home() / "backups"
+
+
+def ensure_layout() -> None:
+    for name in [
+        "atlas",
+        "registry",
+        "runtime",
+        "knowledge",
+        "collab",
+        "logs",
+        "backups",
+        "manifests",
+        "profiles",
+        "tmp",
+        "bin",
+    ]:
+        (constellar_home() / name).mkdir(parents=True, exist_ok=True)
+
+
+def load_json(path: Path) -> dict:
+    with path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def write_json(path: Path, payload: dict) -> None:
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def write_markdown(path: Path, lines: list[str]) -> None:
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def load_profile(name: str) -> dict:
+    return load_json(profile_dir() / f"{name}.json")
+
+
+def load_install_bundle() -> dict:
+    return load_json(manifest_dir() / "install-bundle.json")
+
+
+def load_backup_manifest() -> dict:
+    return load_json(backup_dir() / "nas-backup-manifest.json")
+
+
+def profile_payload(name: str) -> dict:
+    profile = load_profile(name)
+    bundle = load_install_bundle()
+    return {
+        "name": profile["name"],
+        "description": profile.get("description"),
+        "required_repos": profile.get("required_repos", []),
+        "required_artifacts": bundle.get("required_artifacts", []),
+        "runtime_family": profile.get("runtime_family", []),
+    }
+
+
+def make_install_plan(mode: str, clone_repos: bool) -> dict:
+    profile = profile_payload(mode)
+    steps = [
+        "ensure ~/.constellar layout",
+        "load install bundle manifest",
+        f"load profile {mode}",
+        "wire runtime family surfaces",
+        "write install state artifact",
+    ]
+    if clone_repos and profile["required_repos"]:
+        steps.insert(3, "clone required repos for dev-capable install")
+    return {
+        "mode": mode,
+        "profile": profile,
+        "clone_repos": clone_repos,
+        "steps": steps,
+    }
+
+
+def validate_target(host: str, port: int = 22, timeout: float = 2.0) -> dict:
+    result = {"host": host, "port": port, "reachable": False}
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            result["reachable"] = True
+    except OSError as exc:
+        result["error"] = str(exc)
+    return result
+
+
+def create_backup_payload() -> Path:
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    payload = backup_dir() / f"constella-backup-payload-{ts}.tar.gz"
+    include_roots = [manifest_dir(), profile_dir(), backup_dir()]
+    with tarfile.open(payload, "w:gz") as tar:
+        for root in include_roots:
+            if root.exists():
+                tar.add(root, arcname=root.relative_to(constellar_home()))
+    return payload
+
+
+def machine_snapshot() -> dict:
+    return {
+        "hostname": socket.gethostname(),
+        "platform": sys.platform,
+        "python": sys.version.split()[0],
+        "constellar_home": str(constellar_home()),
+    }
+
+
+def cmd_install(args: argparse.Namespace) -> int:
+    ensure_layout()
+    install_plan = make_install_plan(args.mode, bool(args.clone_repos))
+    plan_out = manifest_dir() / "last-install-plan.json"
+    write_json(plan_out, install_plan)
+    if args.plan_only:
+        print(f"install plan written: {plan_out}")
+        return 0
+    install_state = {
+        "mode": args.mode,
+        "profile": install_plan["profile"]["name"],
+        "runtime_family": install_plan["profile"]["runtime_family"],
+        "required_repos": install_plan["profile"]["required_repos"],
+        "required_artifacts": install_plan["profile"]["required_artifacts"],
+        "clone_repos": bool(args.clone_repos),
+    }
+    out = manifest_dir() / "last-install-state.json"
+    write_json(out, install_state)
+    print(f"constella install complete ({args.mode})")
+    print(f"state: {out}")
+    return 0
+
+
+def cmd_doctor(_: argparse.Namespace) -> int:
+    ensure_layout()
+    checks = {
+        "constellar_home": constellar_home().exists(),
+        "profiles": profile_dir().exists(),
+        "manifests": manifest_dir().exists(),
+        "backup_manifest": (backup_dir() / "nas-backup-manifest.json").exists(),
+        "install_bundle": (manifest_dir() / "install-bundle.json").exists(),
+        "compatibility_shims": (manifest_dir() / "compatibility-shims.json").exists(),
+        "surface_inventory": (manifest_dir() / "surface-inventory.json").exists(),
+    }
+    print(json.dumps(checks, indent=2, ensure_ascii=False))
+    return 0 if all(checks.values()) else 1
+
+
+def cmd_profile_list(args: argparse.Namespace) -> int:
+    ensure_layout()
+    profiles = sorted(path.stem for path in profile_dir().glob("*.json"))
+    if args.json:
+        print(json.dumps([profile_payload(name) for name in profiles], indent=2, ensure_ascii=False))
+    else:
+        print("\n".join(profiles))
+    return 0
+
+
+def cmd_profile_show(args: argparse.Namespace) -> int:
+    ensure_layout()
+    print(json.dumps(profile_payload(args.name), indent=2, ensure_ascii=False))
+    return 0
+
+
+def cmd_backup_run(args: argparse.Namespace) -> int:
+    ensure_layout()
+    manifest = load_backup_manifest()
+    validation = validate_target(manifest["target"]["host"]) if args.validate_target else None
+    payload_path = str(create_backup_payload()) if args.execute else None
+    plan = {
+        "target": manifest["target"],
+        "scope": manifest["scopes"],
+        "transport": args.transport,
+        "execute": bool(args.execute),
+        "validation": validation,
+        "payload_path": payload_path,
+        "command_preview": None,
+    }
+    if payload_path and args.transport == "rsync":
+        plan["command_preview"] = f"rsync -av '{payload_path}' '{manifest['target']['host']}:{manifest['target']['path']}'"
+    elif payload_path and args.transport == "ssh-cat-pipe":
+        plan["command_preview"] = f"cat '{payload_path}' | ssh {manifest['target']['host']} 'cat > {manifest['target']['path'].rstrip('/')}/{Path(payload_path).name}'"
+    if args.execute and args.validate_target and validation and not validation.get("reachable"):
+        print(json.dumps(plan, indent=2, ensure_ascii=False))
+        print("target validation failed; refusing execute mode", file=sys.stderr)
+        return 2
+    out = backup_dir() / "last-backup-plan.json"
+    write_json(out, plan)
+    print(f"backup plan written: {out}")
+    return 0
+
+
+def cmd_restore_run(args: argparse.Namespace) -> int:
+    ensure_layout()
+    profile = profile_payload(args.profile)
+    restore_state = {
+        "profile": args.profile,
+        "profile_payload": profile,
+        "source": str(backup_dir() / "nas-backup-manifest.json"),
+        "mode": "staged-restore-plan",
+        "steps": [
+            "restore selected repo snapshot set",
+            "restore ~/.constellar appdata snapshot",
+            "restore DB snapshot if profile requires knowledge plane",
+            "re-run constella doctor",
+            "verify runtime family surfaces for the selected profile",
+        ],
+    }
+    out = backup_dir() / "last-restore-plan.json"
+    write_json(out, restore_state)
+    print(f"restore plan written: {out}")
+    return 0
+
+
+def cmd_verify_bootstrap(args: argparse.Namespace) -> int:
+    ensure_layout()
+    profile = profile_payload(args.profile)
+    verification = {
+        "mode": "bootstrap-verification",
+        "profile": args.profile,
+        "machine": machine_snapshot(),
+        "required_repos": profile["required_repos"],
+        "required_artifacts": profile["required_artifacts"],
+        "runtime_family": profile["runtime_family"],
+        "checks": [
+            {"id": "layout", "label": "constellar layout exists"},
+            {"id": "manifests", "label": "install manifests available"},
+            {"id": "profiles", "label": "profile payload is readable"},
+            {"id": "runtime_family", "label": "runtime family list is available"},
+        ],
+        "next_action": "Attach the generated JSON/Markdown artifacts to GitHub issue #1 for TASK-024.",
+    }
+    required_repos_lines = [f"- `{item}`" for item in verification["required_repos"]] or ["- none"]
+    out = manifest_dir() / "last-bootstrap-verification.json"
+    write_json(out, verification)
+    write_markdown(
+        manifest_dir() / "last-bootstrap-verification.md",
+        [
+            "# Constella Bootstrap Verification",
+            "",
+            f"- profile: `{args.profile}`",
+            f"- hostname: `{verification['machine']['hostname']}`",
+            f"- platform: `{verification['machine']['platform']}`",
+            f"- python: `{verification['machine']['python']}`",
+            f"- constellar_home: `{verification['machine']['constellar_home']}`",
+            "",
+            "## Required Repos",
+            *required_repos_lines,
+            "",
+            "## Runtime Family",
+            *[f"- `{item}`" for item in verification["runtime_family"]],
+            "",
+            "## Next",
+            f"- {verification['next_action']}",
+        ],
+    )
+    print(f"bootstrap verification written: {out}")
+    return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="constella")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    install = sub.add_parser("install")
+    install.add_argument("--mode", default="bootstrap", choices=["bootstrap", "dev", "runtime-only", "ops"])
+    install.add_argument("--clone-repos", action="store_true")
+    install.add_argument("--plan-only", action="store_true")
+    install.set_defaults(func=cmd_install)
+
+    doctor = sub.add_parser("doctor")
+    doctor.set_defaults(func=cmd_doctor)
+
+    profile = sub.add_parser("profile")
+    profile_sub = profile.add_subparsers(dest="profile_command", required=True)
+    profile_list = profile_sub.add_parser("list")
+    profile_list.add_argument("--json", action="store_true")
+    profile_list.set_defaults(func=cmd_profile_list)
+    profile_show = profile_sub.add_parser("show")
+    profile_show.add_argument("name")
+    profile_show.set_defaults(func=cmd_profile_show)
+
+    backup = sub.add_parser("backup")
+    backup_sub = backup.add_subparsers(dest="backup_command", required=True)
+    backup_run = backup_sub.add_parser("run")
+    backup_run.add_argument("--transport", default="rsync", choices=["rsync", "ssh-cat-pipe"])
+    backup_run.add_argument("--validate-target", action="store_true")
+    backup_run.add_argument("--execute", action="store_true")
+    backup_run.set_defaults(func=cmd_backup_run)
+
+    restore = sub.add_parser("restore")
+    restore_sub = restore.add_subparsers(dest="restore_command", required=True)
+    restore_run = restore_sub.add_parser("run")
+    restore_run.add_argument("--profile", default="bootstrap", choices=["bootstrap", "dev", "runtime-only", "ops"])
+    restore_run.set_defaults(func=cmd_restore_run)
+
+    verify = sub.add_parser("verify")
+    verify_sub = verify.add_subparsers(dest="verify_command", required=True)
+    verify_bootstrap = verify_sub.add_parser("bootstrap")
+    verify_bootstrap.add_argument("--profile", default="bootstrap", choices=["bootstrap", "dev", "runtime-only", "ops"])
+    verify_bootstrap.set_defaults(func=cmd_verify_bootstrap)
+
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
+    args = parser.parse_args()
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

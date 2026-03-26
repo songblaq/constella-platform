@@ -1,0 +1,31 @@
+{
+  "version": "2026-03-26",
+  "target": {
+    "type": "nas",
+    "host": "example.local",
+    "path": "/volume1/constella/",
+    "transport": "rsync-or-ssh-cat-pipe",
+    "note": "Replace with your NAS or remote backup target before execute mode."
+  },
+  "scopes": [
+    {
+      "name": "repos",
+      "items": [
+        "~/.agenthive/",
+        "~/.aria/",
+        "~/.openclaw/",
+        "~/_/projects/"
+      ]
+    },
+    {
+      "name": "appdata",
+      "items": [
+        "~/.constellar/"
+      ]
+    }
+  ],
+  "restore_policy": {
+    "granularity": "machine-profile",
+    "secrets": "path-reference-only"
+  }
+}

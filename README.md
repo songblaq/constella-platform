@@ -19,6 +19,7 @@ Constella Platform is the product repo for the shared capability/service core an
 
 - Multi-machine bootstrap runbook: [`docs/multi-machine-bootstrap.md`](docs/multi-machine-bootstrap.md)
 - Release prep notes: [`docs/release-prep.md`](docs/release-prep.md)
+- Local `.constellar` seed script: `python scripts/bootstrap_constellar.py --home ~/.constellar`
 
 ## Public collaboration
 

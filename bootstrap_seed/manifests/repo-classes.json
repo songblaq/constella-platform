@@ -1,0 +1,28 @@
+{
+  "version": "2026-03-26",
+  "umbrella": "Constella",
+  "classes": {
+    "system": [
+      "agent-hive",
+      "aria",
+      "openclaw",
+      "constella-system"
+    ],
+    "domain": [
+      "content-factory",
+      "smart-gym",
+      "testforge",
+      "research-lab",
+      "lb-system"
+    ],
+    "operations": [
+      "ops",
+      "knowledge-mgmt",
+      "discord-research-ops",
+      "autoresearch"
+    ],
+    "distribution": [
+      "constella-distribution"
+    ]
+  }
+}

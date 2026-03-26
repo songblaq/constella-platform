@@ -9,7 +9,12 @@ Validate that `constella-platform` and the `.constellar` bootstrap flow work on 
 ### Scenario A — Repo-backed dev install
 
 1. Clone `https://github.com/songblaq/constella-platform`
-2. Create/use a local `~/.constellar/`
+2. Seed a local `~/.constellar/`
+
+```bash
+python scripts/bootstrap_constellar.py --home ~/.constellar
+```
+
 3. Run:
 
 ```bash
@@ -21,10 +26,18 @@ Validate that `constella-platform` and the `.constellar` bootstrap flow work on 
 - profiles readable
 - runtime family list present
 - required repos listed for `dev`
+- generated artifacts exist:
+  - `~/.constellar/manifests/last-bootstrap-verification.json`
+  - `~/.constellar/manifests/last-bootstrap-verification.md`
 
 ### Scenario B — Clone-less bootstrap verification
 
 1. Provision `~/.constellar/` only
+
+```bash
+python scripts/bootstrap_constellar.py --home ~/.constellar
+```
+
 2. Ensure manifests/profiles exist
 3. Run:
 
@@ -57,3 +70,4 @@ Validate that `constella-platform` and the `.constellar` bootstrap flow work on 
 - GitHub issue: use or update issue #1
 - AgentHive: map findings back to `TASK-024`
 - Governance: lessons should become guardrails if repeated
+- Attach the generated JSON or Markdown verification artifact to the issue comment when possible

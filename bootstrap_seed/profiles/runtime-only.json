@@ -1,0 +1,16 @@
+{
+  "name": "runtime-only",
+  "description": "runtime worker install",
+  "required_repos": [],
+  "required_artifacts": [
+    "manifests",
+    "profiles",
+    "bin/constella"
+  ],
+  "runtime_family": [
+    "openclaw",
+    "codex",
+    "opencode",
+    "cursor"
+  ]
+}

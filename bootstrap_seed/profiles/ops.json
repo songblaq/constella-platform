@@ -1,0 +1,17 @@
+{
+  "name": "ops",
+  "description": "ops and backup focused install",
+  "required_repos": [
+    "agent-hive",
+    "aria"
+  ],
+  "required_artifacts": [
+    "manifests",
+    "profiles",
+    "backups",
+    "bin/constella"
+  ],
+  "runtime_family": [
+    "openclaw"
+  ]
+}

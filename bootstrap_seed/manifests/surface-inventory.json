@@ -1,0 +1,26 @@
+{
+  "version": "2026-03-26",
+  "surfaces": [
+    {
+      "id": "constellar-manifests",
+      "class": "manifests",
+      "legacy_path": null,
+      "constellar_path": "~/.constellar/manifests",
+      "disposition": "keep"
+    },
+    {
+      "id": "constellar-profiles",
+      "class": "profiles",
+      "legacy_path": null,
+      "constellar_path": "~/.constellar/profiles",
+      "disposition": "keep"
+    },
+    {
+      "id": "constellar-backups",
+      "class": "backups",
+      "legacy_path": null,
+      "constellar_path": "~/.constellar/backups",
+      "disposition": "keep"
+    }
+  ]
+}

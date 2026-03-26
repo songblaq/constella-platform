@@ -1,0 +1,14 @@
+{
+  "name": "bootstrap",
+  "description": "clone-less minimal install",
+  "required_repos": [],
+  "required_artifacts": [
+    "manifests",
+    "profiles",
+    "bin/constella"
+  ],
+  "runtime_family": [
+    "openclaw",
+    "codex"
+  ]
+}

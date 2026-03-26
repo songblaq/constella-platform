@@ -1,0 +1,37 @@
+{
+  "version": "2026-03-26",
+  "naming": [
+    {
+      "old": "LucaBlaq System",
+      "new": "Constella",
+      "disposition": "migrate"
+    },
+    {
+      "old": "LB System",
+      "new": "Constella Knowledge Plane",
+      "disposition": "historical"
+    },
+    {
+      "old": "DO = OpenClaw",
+      "new": "DO = Runtime Family",
+      "disposition": "migrate"
+    }
+  ],
+  "paths": [
+    {
+      "old": "~/.openclaw/workspace/",
+      "new": "~/.constellar/",
+      "disposition": "later_migrate"
+    },
+    {
+      "old": "~/.openclaw/data/orbit/",
+      "new": "~/.constellar/runtime/orbit-mirror/",
+      "disposition": "mirror"
+    },
+    {
+      "old": "ad-hoc backup logs/scripts",
+      "new": "~/.constellar/backups/",
+      "disposition": "migrate"
+    }
+  ]
+}

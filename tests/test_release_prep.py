@@ -13,6 +13,7 @@ def test_release_prep_and_drilldown_surfaces_are_exposed(tmp_path, monkeypatch):
     assert release["capability_id"] == "distribution.release.prep"
     assert release["data"]["package_name"] == "constella-platform"
     assert "install_bundle" in release["data"]["artifacts"]
+    assert release["data"]["artifacts"]["bootstrap_script"] == "scripts/bootstrap_constellar.py"
 
     assert drilldown["capability_id"] == "operator.detail.views"
     assert any(item["id"] == "agenthive-project-detail" for item in drilldown["data"]["views"])

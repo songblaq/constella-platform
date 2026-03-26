@@ -1,0 +1,19 @@
+{
+  "name": "dev",
+  "description": "repo-backed development install",
+  "required_repos": [
+    "agent-hive",
+    "aria",
+    "openclaw"
+  ],
+  "required_artifacts": [
+    "manifests",
+    "profiles",
+    "bin/constella"
+  ],
+  "runtime_family": [
+    "openclaw",
+    "claude-code",
+    "codex"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "version": "2026-03-26",
+  "strategy": "mirror-pointer-first",
+  "shims": [
+    {
+      "type": "symlink",
+      "from": "~/.constellar/runtime/openclaw-workspace",
+      "to": "~/.openclaw/workspace",
+      "purpose": "legacy workspace surface available from new appdata home"
+    },
+    {
+      "type": "symlink",
+      "from": "~/.constellar/runtime/openclaw-data-orbit",
+      "to": "~/.openclaw/data/orbit",
+      "purpose": "legacy orbit runtime state visible from new appdata home"
+    },
+    {
+      "type": "symlink",
+      "from": "~/.constellar/knowledge/aria-knowledge",
+      "to": "~/.aria/knowledge",
+      "purpose": "legacy ARIA knowledge surface visible from new appdata home"
+    }
+  ]
+}

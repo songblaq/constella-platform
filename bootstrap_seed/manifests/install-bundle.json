@@ -1,0 +1,28 @@
+{
+  "version": "2026-03-26",
+  "name": "constella-bootstrap-bundle",
+  "install_modes": [
+    "bootstrap",
+    "dev",
+    "runtime-only",
+    "ops"
+  ],
+  "required_artifacts": [
+    "~/.constellar/manifests/repo-classes.json",
+    "~/.constellar/manifests/migration-matrix.json",
+    "~/.constellar/manifests/compatibility-shims.json",
+    "~/.constellar/profiles/bootstrap.json",
+    "~/.constellar/profiles/dev.json",
+    "~/.constellar/profiles/runtime-only.json",
+    "~/.constellar/profiles/ops.json",
+    "~/.constellar/backups/nas-backup-manifest.json"
+  ],
+  "runtime_family": [
+    "openclaw",
+    "claude-code",
+    "codex",
+    "opencode",
+    "cursor",
+    "copilot"
+  ]
+}
