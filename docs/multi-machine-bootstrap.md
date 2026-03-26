@@ -78,3 +78,9 @@ python scripts/bootstrap_constellar.py --home ~/.constellar
 python scripts/render_bootstrap_issue_comment.py \
   --verification-json ~/.constellar/manifests/last-bootstrap-verification.json
 ```
+
+- Or run the whole preflight in one command:
+
+```bash
+python scripts/bootstrap_verify_and_render.py --home ~/.constellar --profile dev
+```
