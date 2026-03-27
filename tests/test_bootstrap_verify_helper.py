@@ -27,3 +27,4 @@ def test_bootstrap_verify_and_render_helper(tmp_path):
     assert "## Bootstrap Verification Result" in result.stdout
     assert (home / "manifests" / "last-bootstrap-verification.json").exists()
     assert (home / "manifests" / "last-bootstrap-verification.md").exists()
+    assert (home / "manifests" / "last-bootstrap-issue-comment.md").exists()

@@ -53,6 +53,8 @@ def main() -> int:
             str(REPO_ROOT / "scripts" / "render_bootstrap_issue_comment.py"),
             "--verification-json",
             str(home / "manifests" / "last-bootstrap-verification.json"),
+            "--output",
+            str(home / "manifests" / "last-bootstrap-issue-comment.md"),
         ]
     )
     if render.returncode != 0:
