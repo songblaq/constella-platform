@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 
-REPO_ROOT = Path("/Users/lucablaq/_/projects/constella-platform")
+REPO_ROOT = Path(__file__).resolve().parents[1]
 BOOTSTRAP_SCRIPT = REPO_ROOT / "scripts" / "bootstrap_constellar.py"
 
 
